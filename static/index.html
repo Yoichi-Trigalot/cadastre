@@ -1,0 +1,114 @@
+<!-- static/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Location App</title>
+	<link rel="stylesheet" href="/static/css/styles.css">
+
+</head>
+
+<body>
+	<h1 class="text-center text-red-400 text-2xl">Location App</h1>
+	<label class="text-blue-400" for="locationInput">Search location:</label>
+	<input type="text" id="locationInput" name="locationInput" required>
+	<button class="bg-blue-200 border-blue-400 border-2" id="searchButton" type="submit">Search</button>
+	<button id="clearButton" type="reset">Clear</button>
+	<div class="bg-gray-600">
+		<ul id="planNumberList">
+			<!-- Les éléments de la liste seront ajoutés dynamiquement avec JavaScript -->
+		</ul>
+	</div>
+	<div id="results"></div>
+	<div id="planSection" style="display: none;">
+		<h2>Plan:</h2>
+		<img id="planImage" alt="Plan">
+	</div>
+
+	<script src="main.js"></script>
+
+	<script>
+		// document.getElementById('locationInput').addEventListener('input', function () {
+		// 	const input = this.value.trim();
+
+		// 	// Perform the search only if the input has at least 3 characters
+		// 	if (input.length >= 3) {
+		// 		searchLocation(input);
+		// 	} else {
+		// 		// Clear results if input is less than 3 characters
+		// 		document.getElementById('results').innerHTML = '';
+		// 		document.getElementById('planSection').style.display = 'none';
+		// 	}
+		// });
+
+		// async function searchLocation(input) {
+		// 	const response = await fetch(`http://localhost:3000/search?name=${input}`);
+		// 	const data = await response.json();
+
+		// 	const resultsDiv = document.getElementById("results");
+		// 	resultsDiv.innerHTML = "<h2>Search Results:</h2>";
+
+		// 	if (data.results.length === 0) {
+		// 		resultsDiv.innerHTML += "<p>No results found.</p>";
+		// 	} else {
+		// 		const planNumbers = new Set(data.results.map(result => result.Plan_number));
+
+		// 		if (planNumbers.size === 1) {
+		// 			// Tous les résultats partagent le même numéro de plan, afficher le plan directement
+		// 			const planNumber = planNumbers.values().next().value;
+		// 			showPlan(planNumber);
+		// 			// resultsDiv.innerHTML += "<p>Results share the same plan. Plan is displayed above.</p>";
+		// 		} else {
+		// 			document.getElementById('planSection').style.display = 'none';
+		// 		}
+
+		// 		// Afficher les numéros de plan comme des liens
+		// 		data.results.forEach(result => {
+		// 			resultsDiv.innerHTML += `<p>${result.Name} - ${result.Type} - ${result.Street}, ${result.Quarter} - Plan: <a href="#" onclick="showPlan('${result.Plan_number}')">${result.Plan_number}</a></p>`;
+		// 		});
+
+		// 	}
+		// }
+
+		// function showPlan(planNumber) {
+		// 	// Fetch and display the plan image (replace 'path/to/plan/images/' with the actual path)
+		// 	const planImagePath = `./plans/plan${planNumber}.jpeg`;
+		// 	document.getElementById('planImage').src = planImagePath;
+		// 	document.getElementById('planSection').style.display = 'block';
+		// }
+
+		// function clearInput() {
+		// 	document.getElementById('locationInput').value = '';
+		// 	document.getElementById('results').innerHTML = '';
+		// }
+
+		// // Mettez à jour le gestionnaire d'événements click pour le bouton "Clear"
+		// document.getElementById('clearButton').addEventListener('click', clearInput);
+
+		// function populatePlanNumberList(planCount) {
+		// 		const planNumberList = document.getElementById('planNumberList');
+
+		// 		// Efface tous les éléments actuels de la liste
+		// 		planNumberList.innerHTML = '';
+
+		// 		// Ajoute chaque numéro de plan comme un élément de la liste numérotée
+		// 		for (let i = 1; i <= planCount; i++) {
+		// 			const listItem = document.createElement('li');
+		// 			listItem.textContent = `Plan ${i}`;
+
+		// 			// Ajoute un gestionnaire d'événements au clic sur chaque numéro de plan
+		// 			listItem.addEventListener('click', function () {
+		// 				showPlan(i);
+		// 			});
+
+		// 			planNumberList.appendChild(listItem);
+		// 		}
+		// 	}
+		// populatePlanNumberList(15)
+	</script>
+</body>
+
+</html>
