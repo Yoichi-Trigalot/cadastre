@@ -36,10 +36,10 @@ async function searchLocation(input) {
 	const data = await response.json();
 
 	const resultsDiv = document.getElementById("results");
-	resultsDiv.innerHTML = "<h2>Search Results:</h2>";
+	resultsDiv.innerHTML = "<h2>Resultats:</h2>";
 
 	if (data.results.length === 0) {
-		resultsDiv.innerHTML += "<p>No results found.</p>";
+		resultsDiv.innerHTML += "<p>Aucun résultats.</p>";
 	} else {
 		const planNumbers = new Set(data.results.map(result => result.Plan_number));
 
@@ -54,7 +54,7 @@ async function searchLocation(input) {
 
 		// Afficher les numéros de plan comme des liens
 		data.results.forEach(result => {
-			resultsDiv.innerHTML += `<p>${result.Name} - ${result.Type} - ${result.Street}, ${result.Quarter} - Plan: <a href="#" onclick="showPlan('${result.Plan_number}')">${result.Plan_number}</a></p>`;
+			resultsDiv.innerHTML += `<p class="text-xl"><a href="#" onclick="showPlan('${result.Plan_number}')"><span class="underline">${result.Number}</span> - <span class="font-bold">${result.Name}</span> (${result.Type}) ${result.Street}, ${result.Quarter} - plan -> ${result.Plan_number}</a></p>`;
 		});
 
 	}
@@ -74,6 +74,8 @@ function showPlan(planNumber) {
 function clearInput() {
 	document.getElementById('locationInput').value = '';
 	document.getElementById('results').innerHTML = '';
+	document.getElementById('planSection').style.display = 'none';
+
 }
 
 // Handle clear Trigger event
@@ -89,13 +91,15 @@ function populatePlanNumberList(planCount) {
 
 	for (let i = 1; i <= planCount; i++) {
 		const listItem = document.createElement('li');
-		listItem.textContent = `Plan ${i}`;
+		listItem.textContent = `${i}`;
+		listItem.classList.add('inline', 'text-white', 'list-none', 'ml-2', 'px-4', 'py-2', 'bg-green-700', 'rounded-lg', 'cursor-pointer');
 
 		listItem.addEventListener('click', function () {
 			showPlan(i);
 		});
 
 		planNumberList.appendChild(listItem);
+		console.log(planNumberList);
 	}
 }
 

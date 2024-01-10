@@ -41,10 +41,8 @@ app.get('/', (req, res) => {
 });
 
 app.get('/search', (req, res) => {
-	console.log(locations)
 	const name = req.query.name?.toLowerCase();
 	const results = locations.filter(loc => loc.Name.toLowerCase().includes(name));
-	console.log(results)
 	res.json({ results });
 });
 
