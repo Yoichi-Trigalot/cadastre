@@ -109,3 +109,17 @@ function populatePlanNumberList(planCount) {
 }
 
 populatePlanNumberList(15);
+
+// handle plan zoom
+
+// Initialise Hammer.js sur l'image
+const hammer = new Hammer(planImage);
+
+// Active le support du zoom sur l'image
+hammer.get('pinch').set({ enable: true });
+
+// Gère l'événement de zoom
+hammer.on('pinch', function (event) {
+	const currentZoom = event.scale;
+	planImage.style.transform = `scale(${currentZoom})`;
+});
