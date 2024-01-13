@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 
 app.get('/search', (req, res) => {
 	const name = req.query.name?.toLowerCase();
-	const results = locations.filter(loc => loc.Name.toLowerCase().includes(name));
+	const results = locations.filter(loc => loc.Name.toLowerCase().replace('+', ' ').includes(name));
 	res.json({ results });
 });
 

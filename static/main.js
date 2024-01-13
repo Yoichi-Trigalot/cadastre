@@ -1,107 +1,111 @@
-// Fetch User input and trigger search function
+// Accéder aux éléments du DOM
+const locationInput = document.getElementById('locationInput');
+const resultsDiv = document.getElementById('results');
+const planSection = document.getElementById('planSection');
+const planImage = document.getElementById('planImage');
 
-document.getElementById('locationInput').addEventListener('input', function () {
-	const input = this.value.trim();
+// Écouter les événements sur l'input
+locationInput.addEventListener('input', handleInput);
 
-	// Perform the search only if the input has at least 3 characters
+// Écouter les événements sur le bouton de recherche
+document.getElementById('searchButton').addEventListener('click', handleInput);
+
+// Écouter les événements sur le bouton de nettoyage
+document.getElementById('clearButton').addEventListener('click', clearInput);
+
+// Fonction principale pour gérer l'input
+function handleInput() {
+	const input = locationInput.value.trim();
 	if (input.length >= 3) {
 		searchLocation(input);
 	} else {
-		// Clear results if input is less than 3 characters
-		document.getElementById('results').innerHTML = '';
-		document.getElementById('planSection').style.display = 'none';
+		clearResults();
 	}
-});
+}
 
-// Handle Search Button Click
-
-document.getElementById('searchButton').addEventListener('click', function () {
-	const input = document.getElementById('locationInput').value.trim();
-
-	// Perform the search only if the input has at least 3 characters
-	if (input.length >= 3) {
-		searchLocation(input);
-	} else {
-		// Clear results if input is less than 3 characters
-		document.getElementById('results').innerHTML = '';
-		document.getElementById('planSection').style.display = 'none';
-	}
-});
-
-
-// Search Function
-
+// Fonction pour effectuer la recherche
 async function searchLocation(input) {
 	const response = await fetch(`http://localhost:3000/search?name=${input}`);
 	const data = await response.json();
 
-	const resultsDiv = document.getElementById("results");
 	resultsDiv.innerHTML = "<h2>Resultats:</h2>";
 
 	if (data.results.length === 0) {
 		resultsDiv.innerHTML += "<p>Aucun résultats.</p>";
 	} else {
 		const planNumbers = new Set(data.results.map(result => result.Plan_number));
-
 		if (planNumbers.size === 1) {
-			// Tous les résultats partagent le même numéro de plan, afficher le plan directement
 			const planNumber = planNumbers.values().next().value;
 			showPlan(planNumber);
-			// resultsDiv.innerHTML += "<p>Results share the same plan. Plan is displayed above.</p>";
 		} else {
-			document.getElementById('planSection').style.display = 'none';
+			planSection.style.display = 'none';
 		}
 
-		// Afficher les numéros de plan comme des liens
 		data.results.forEach(result => {
-			resultsDiv.innerHTML += `<p class="text-xl"><a href="#" onclick="showPlan('${result.Plan_number}')"><span class="underline">${result.Number}</span> - <span class="font-bold">${result.Name}</span> (${result.Type}) ${result.Street}, ${result.Quarter} - plan -> ${result.Plan_number}</a></p>`;
-		});
+			const place = {
+				placeNumber: result.Plan_number,
+				name: result.Name,
+				number: result.Number,
+				type: result.Type,
+				street: result.Street,
+				quarter: result.Quarter,
+			};
+			const placeJSON = JSON.stringify(place).replace(/\n/g, ' ');
 
+			resultsDiv.innerHTML += generateResultHTML(place);
+		});
 	}
 }
 
-// Handle Plan Click and display it
+// Fonction pour générer le HTML d'un résultat
+function generateResultHTML(place) {
+	return `<p class="text-md sm:text-xl"><a href="#" onclick="handleResultClick('${place.placeNumber}','${place.name}','${place.number}','${place.type}','${place.street}','${place.quarter}')">
+      <span class="underline">${place.number}</span> - <span class="font-bold">${place.name}</span>
+      <span class="text-gray-500 text-sm">(${place.type}) ${place.street}, ${place.quarter} - plan -> ${place.placeNumber}</span></a></p>`;
+}
 
+// Fonction pour gérer le clic sur un résultat
+function handleResultClick(placeNumber, name, number, type, street, quarter) {
+	const place = { placeNumber, name, number, type, street, quarter };
+	locationInput.value = place.name;
+	const placeJSON = JSON.stringify(place).replace(/\n/g, ' ');
+	resultsDiv.innerHTML = generateResultHTML(place);
+	showPlan(place.placeNumber);
+}
+
+// Fonction pour afficher un plan
 function showPlan(planNumber) {
-	// Fetch and display the plan image (replace 'path/to/plan/images/' with the actual path)
 	const planImagePath = `./plans/plan${planNumber}.jpeg`;
-	document.getElementById('planImage').src = planImagePath;
-	document.getElementById('planSection').style.display = 'block';
+	planImage.src = planImagePath;
+	planSection.style.display = 'block';
 }
 
-// Clear input field
-
+// Fonction pour effacer l'input et les résultats
 function clearInput() {
-	document.getElementById('locationInput').value = '';
-	document.getElementById('results').innerHTML = '';
-	document.getElementById('planSection').style.display = 'none';
-
+	locationInput.value = '';
+	clearResults();
 }
 
-// Handle clear Trigger event
+// Fonction pour effacer les résultats
+function clearResults() {
+	resultsDiv.innerHTML = '';
+	planSection.style.display = 'none';
+}
 
-document.getElementById('clearButton').addEventListener('click', clearInput);
-
-// Display all Plans list
-
+// Fonction pour afficher la liste de plans
 function populatePlanNumberList(planCount) {
 	const planNumberList = document.getElementById('planNumberList');
-
 	planNumberList.innerHTML = '';
 
 	for (let i = 1; i <= planCount; i++) {
 		const listItem = document.createElement('li');
 		listItem.textContent = `${i}`;
-		listItem.classList.add('inline', 'text-white', 'list-none', 'ml-2', 'px-4', 'py-2', 'bg-green-700', 'rounded-lg', 'cursor-pointer');
+		listItem.classList.add('inline', 'text-white', 'list-none', 'py-1', 'sm:py-2', 'bg-green-600', 'text-center', 'rounded-lg', 'cursor-pointer');
 
-		listItem.addEventListener('click', function () {
-			showPlan(i);
-		});
+		listItem.addEventListener('click', () => showPlan(i));
 
 		planNumberList.appendChild(listItem);
-		console.log(planNumberList);
 	}
 }
 
-populatePlanNumberList(15)
-
+populatePlanNumberList(15);
