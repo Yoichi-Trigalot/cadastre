@@ -40,7 +40,7 @@ app.get('/', (req, res) => {
 	res.sendFile(__dirname + '/public/index.html');
 });
 
-app.get('/search', (req, res) => {
+app.get('/search', async (req, res) => {
 	const name = req.query.name?.toLowerCase();
 	const results = locations.filter(loc => loc.Name.toLowerCase().replace('+', ' ').includes(name));
 	res.json({ results });
