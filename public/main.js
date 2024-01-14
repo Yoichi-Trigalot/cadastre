@@ -24,8 +24,13 @@ function handleInput() {
 }
 
 // Fonction pour effectuer la recherche
-async function searchLocation(input) {
-	const response = await fetch(`http://localhost:3000/search?name=${input}`);
+async function searchLocation(input, req) {
+	const hostname = req.hostname;
+
+	const baseUrl = `https://${hostname}`;
+
+	const response = await fetch(`${baseUrl}/search?name=${input}`);
+
 	const data = await response.json();
 
 	resultsDiv.innerHTML = "<h2>Resultats:</h2>";
