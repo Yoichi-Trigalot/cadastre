@@ -1,3 +1,5 @@
+import dotenv from 'dotenv';
+
 // Accéder aux éléments du DOM
 const locationInput = document.getElementById('locationInput');
 const resultsDiv = document.getElementById('results');
@@ -24,10 +26,9 @@ function handleInput() {
 }
 
 // Fonction pour effectuer la recherche
-async function searchLocation(input, req) {
-	const hostname = req.hostname;
+async function searchLocation(input) {
 
-	const baseUrl = `https://${hostname}`;
+	baseUrl = 'https://cadastre-2nlhyxemw-yoichi-trigalot.vercel.app'; // for dev purpose replace with localhost
 
 	const response = await fetch(`${baseUrl}/search?name=${input}`);
 
