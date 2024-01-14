@@ -1,5 +1,3 @@
-import dotenv from 'dotenv';
-
 // Accéder aux éléments du DOM
 const locationInput = document.getElementById('locationInput');
 const resultsDiv = document.getElementById('results');
