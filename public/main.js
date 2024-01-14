@@ -26,9 +26,8 @@ function handleInput() {
 // Fonction pour effectuer la recherche
 async function searchLocation(input) {
 
-	baseUrl = 'https://cadastre-one.vercel.app/'; // for dev purpose replace with localhost
 
-	const response = await fetch(`${baseUrl}search?name=${input}`);
+	const response = await fetch(`/search?name=${input}`);
 
 	const data = await response.json();
 
