@@ -5,9 +5,9 @@ const app = express();
 const path = require('path');
 const port = 3000;
 
-app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use('/public', express.static(path.join(__dirname, 'public')));
 
-const csvPath = './static/Cadastre.csv'
+const csvPath = './public/Cadastre.csv'
 
 function readCsv() {
 	const objectsList = [];
@@ -37,7 +37,7 @@ function readCsv() {
 const locations = readCsv()
 
 app.get('/', (req, res) => {
-	res.sendFile(__dirname + '/static/index.html');
+	res.sendFile(__dirname + '/public/index.html');
 });
 
 app.get('/search', (req, res) => {
@@ -46,7 +46,7 @@ app.get('/search', (req, res) => {
 	res.json({ results });
 });
 
-app.use(express.static('static'));
+app.use(express.static('public'));
 
 app.listen(port, () => {
 	console.log(`Server listening at http://localhost:${port}`);
