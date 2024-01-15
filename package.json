@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --watch ./api/index.js",
+    "start": "node --watch index.js",
     "build:css": "postcss public/css/main.css -o public/css/styles.css",
     "watch:css": "postcss public/css/main.css -o public/css/styles.css --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
