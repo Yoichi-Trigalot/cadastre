@@ -113,16 +113,16 @@ function populatePlanNumberList(planCount) {
 
 populatePlanNumberList(15);
 
-// handle plan zoom
+// // handle plan zoom
 
-// Initialise Hammer.js sur l'image
-const hammer = new Hammer(planImage);
+// // Initialise Hammer.js sur l'image
+// const hammer = new Hammer(planImage);
 
-// Active le support du zoom sur l'image
-hammer.get('pinch').set({ enable: true });
+// // Active le support du zoom sur l'image
+// hammer.get('pinch').set({ enable: true });
 
-// Gère l'événement de zoom
-hammer.on('pinch', function (event) {
-	const currentZoom = event.scale;
-	planImage.style.transform = `scale(${currentZoom})`;
-});
+// // Gère l'événement de zoom
+// hammer.on('pinch', function (event) {
+// 	const currentZoom = event.scale;
+// 	planImage.style.transform = `scale(${currentZoom})`;
+// });
