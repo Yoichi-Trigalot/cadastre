@@ -3,6 +3,9 @@ const locationInput = document.getElementById('locationInput');
 const resultsDiv = document.getElementById('results');
 const planSection = document.getElementById('planSection');
 const planImage = document.getElementById('planImage');
+const fireCode = document.getElementById('fireCode');
+const key = document.getElementById('key');
+let isHidden = true
 
 // Écouter les événements sur l'input
 locationInput.addEventListener('input', handleInput);
@@ -12,6 +15,9 @@ document.getElementById('searchButton').addEventListener('click', handleInput);
 
 // Écouter les événements sur le bouton de nettoyage
 document.getElementById('clearButton').addEventListener('click', clearInput);
+
+// Écouter le bouton code pompier
+document.getElementById('fireCodeButton').addEventListener('click', toggleFireCode);
 
 // Fonction principale pour gérer l'input
 function handleInput() {
@@ -52,8 +58,10 @@ async function searchLocation(input) {
 				type: result.Type,
 				street: result.Street,
 				quarter: result.Quarter,
+				code: result.Code,
 			};
 			const placeJSON = JSON.stringify(place).replace(/\n/g, ' ');
+
 
 			resultsDiv.innerHTML += generateResultHTML(place);
 		});
@@ -62,16 +70,16 @@ async function searchLocation(input) {
 
 // Fonction pour générer le HTML d'un résultat
 function generateResultHTML(place) {
-	return `<p class="text-md sm:text-xl"><a href="#" onclick="handleResultClick('${place.placeNumber}','${place.name}','${place.number}','${place.type}','${place.street}','${place.quarter}')">
-      <span class="underline">${place.number}</span> - <span class="font-bold">${place.name}</span>
-      <span class="text-gray-500 text-sm">(${place.type}) ${place.street}, ${place.quarter} - plan -> ${place.placeNumber}</span></a></p>`;
+	return `<p class="m-3 text-md sm:text-xl"><a href="#" onclick="handleResultClick('${place.placeNumber}','${place.name}','${place.number}','${place.type}','${place.street}','${place.quarter}','${place.code}')">
+      <span class="bg-slate-600 px-2 py-1 rounded text-white text-center w-12 inline-block">${place.number}</span> - <span class="font-bold">${place.name}</span>
+      <span class="text-gray-500 text-sm">(${place.type}) 📍 ${place.street}, ${place.quarter} - 🗺️ Plan n° ${place.placeNumber} ${place.code == 'PASDEFINI' ? '' : ' - <span class="font-bold"> 🔐 ' + place.code + '</span>'} </span></a></p>`;
 }
 
 // Fonction pour gérer le clic sur un résultat
-function handleResultClick(placeNumber, name, number, type, street, quarter) {
-	const place = { placeNumber, name, number, type, street, quarter };
+function handleResultClick(placeNumber, name, number, type, street, quarter, code) {
+	const place = { placeNumber, name, number, type, street, quarter, code };
 	locationInput.value = place.name;
-	const placeJSON = JSON.stringify(place).replace(/\n/g, ' ');
+	// const placeJSON = JSON.stringify(place).replace(/\n/g, ' ');
 	resultsDiv.innerHTML = generateResultHTML(place);
 	showPlan(place.placeNumber);
 }
@@ -93,6 +101,13 @@ function clearInput() {
 function clearResults() {
 	resultsDiv.innerHTML = '';
 	planSection.style.display = 'none';
+}
+// Fonction pour Montrer/cacher le code pompier
+function toggleFireCode() {
+	console.log(isHidden)
+	key.style.display = isHidden ? 'none' : 'block'
+	fireCode.style.display = isHidden ? 'block' : 'none'
+	isHidden = !isHidden;
 }
 
 // Fonction pour afficher la liste de plans
