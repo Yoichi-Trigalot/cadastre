@@ -1,6 +1,7 @@
 // Accéder aux éléments du DOM
 const locationInput = document.getElementById('locationInput');
 const resultsDiv = document.getElementById('results');
+const resultsDivPlan = document.getElementById('results-plan');
 const planSection = document.getElementById('planSection');
 const planImage = document.getElementById('planImage');
 const fireCode = document.getElementById('fireCode');
@@ -81,6 +82,7 @@ function handleResultClick(placeNumber, name, number, type, street, quarter, cod
 	locationInput.value = place.name;
 	// const placeJSON = JSON.stringify(place).replace(/\n/g, ' ');
 	resultsDiv.innerHTML = generateResultHTML(place);
+	resultsDivPlan.innerHTML = ''
 	showPlan(place.placeNumber);
 }
 
@@ -89,17 +91,20 @@ function showPlan(planNumber) {
 	const planImagePath = `./plans/plan${planNumber}.jpeg`;
 	planImage.src = planImagePath;
 	planSection.style.display = 'block';
+
 }
 
 // Fonction pour effacer l'input et les résultats
 function clearInput() {
 	locationInput.value = '';
 	clearResults();
+	locationInput.focus()
 }
 
 // Fonction pour effacer les résultats
 function clearResults() {
 	resultsDiv.innerHTML = '';
+	resultsDivPlan.innerHTML = ''
 	planSection.style.display = 'none';
 }
 // Fonction pour Montrer/cacher le code pompier
@@ -120,7 +125,36 @@ function populatePlanNumberList(planCount) {
 		listItem.textContent = `${i}`;
 		listItem.classList.add('inline', 'text-white', 'list-none', 'py-1', 'sm:py-2', 'bg-green-600', 'text-center', 'rounded-lg', 'cursor-pointer');
 
-		listItem.addEventListener('click', () => showPlan(i));
+		listItem.addEventListener('click', async () => {
+			showPlan(i);
+			const response = await fetch(`/searchPlan?planId=${i}`);
+
+			const data = await response.json();
+			console.log(data)
+			resultsDiv.innerHTML = ''
+
+			if (data.results.length === 0) {
+				resultsDivPlan.innerHTML += "<p>Aucun résultats.</p>";
+			} else {
+				resultsDivPlan.innerHTML = ''
+
+				data.results.forEach(result => {
+					const place = {
+						placeNumber: result.Plan_number,
+						name: result.Name,
+						number: result.Number,
+						type: result.Type,
+						street: result.Street,
+						quarter: result.Quarter,
+						code: result.Code,
+					};
+					const placeJSON = JSON.stringify(place).replace(/\n/g, ' ');
+
+
+					resultsDivPlan.innerHTML += generateResultHTML(place);
+				});
+			}
+		});
 
 		planNumberList.appendChild(listItem);
 	}

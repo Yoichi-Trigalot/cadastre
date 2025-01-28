@@ -42,7 +42,19 @@ app.get('/', (req, res) => {
 
 app.get('/search', async (req, res) => {
 	const name = req.query.name?.toLowerCase();
-	const results = locations.filter(loc => loc.Name.toLowerCase().replace('+', ' ').includes(name));
+
+	const normalizeString = (str) => {
+		return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+	};
+
+	const results = locations.filter(loc => normalizeString(loc.Name.toLowerCase().replace('+', ' ')).includes(normalizeString(name)) || loc.Number === name );
+	res.json({ results });
+});
+
+app.get('/searchPlan', async (req, res) => {
+	const planId = req.query.planId;
+
+	const results = locations.filter(loc => loc.Plan_number === planId);
 	res.json({ results });
 });
 
